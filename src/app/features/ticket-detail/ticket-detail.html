@@ -1,0 +1,122 @@
+<a class="back-link" routerLink="/tickets">← Back to ticket queue</a>
+
+@if (loading()) {
+  <section class="panel state">
+    <span class="spinner" aria-hidden="true"></span>
+    <h1>Loading ticket</h1>
+  </section>
+} @else if (!ticket()) {
+  <section class="panel state">
+    <h1>Ticket unavailable</h1>
+    <p>{{ errorMessage() }}</p>
+    <a class="button secondary" routerLink="/tickets">Return to queue</a>
+  </section>
+} @else {
+  @let currentTicket = ticket()!;
+  <header class="detail-header">
+    <div>
+      <p class="eyebrow">{{ currentTicket.id }}</p>
+      <h1>{{ currentTicket.title }}</h1>
+      <p>Opened {{ currentTicket.createdAt | date: 'MMMM d, y, h:mm a' }}</p>
+    </div>
+    <div class="header-badges">
+      <span class="badge status" [attr.data-status]="currentTicket.status">{{
+        currentTicket.status
+      }}</span
+      ><span class="badge priority" [attr.data-priority]="currentTicket.priority"
+        >{{ currentTicket.priority }} priority</span
+      >
+    </div>
+  </header>
+
+  @if (successMessage()) {
+    <div class="message success" role="status">{{ successMessage() }}</div>
+  }
+  @if (errorMessage()) {
+    <div class="message error" role="alert">{{ errorMessage() }}</div>
+  }
+
+  <div class="detail-grid">
+    <main>
+      <section class="panel content-card">
+        <h2>Request details</h2>
+        <dl>
+          <div>
+            <dt>Customer</dt>
+            <dd>{{ currentTicket.customer }}</dd>
+          </div>
+          <div>
+            <dt>Assigned to</dt>
+            <dd>{{ currentTicket.assignedTo }}</dd>
+          </div>
+        </dl>
+        <h3>Description</h3>
+        <p class="description">{{ currentTicket.description }}</p>
+      </section>
+
+      <section class="panel notes-card">
+        <div class="section-heading">
+          <div>
+            <h2>Internal notes</h2>
+            <p>Visible to the support team only.</p>
+          </div>
+          <span>{{ currentTicket.notes.length }}</span>
+        </div>
+        @if (currentTicket.notes.length) {
+          <div class="notes-list">
+            @for (note of currentTicket.notes; track note.id) {
+              <article>
+                <div>
+                  <strong>{{ note.author }}</strong
+                  ><time>{{ note.createdAt | date: 'MMM d, y, h:mm a' }}</time>
+                </div>
+                <p>{{ note.body }}</p>
+              </article>
+            }
+          </div>
+        } @else {
+          <p class="empty-note">No internal notes have been added.</p>
+        }
+        <form [formGroup]="noteForm" (ngSubmit)="addNote()">
+          <label for="note">Add an internal note</label>
+          <textarea
+            id="note"
+            formControlName="note"
+            rows="4"
+            maxlength="500"
+            placeholder="Add context for the next person who reviews this ticket"
+          ></textarea>
+          @if (noteForm.controls.note.touched && noteForm.controls.note.invalid) {
+            <p class="field-error">Enter a note between 3 and 500 characters.</p>
+          }
+          <div class="form-footer">
+            <span>{{ noteForm.controls.note.value.length }}/500</span
+            ><button class="button primary" type="submit" [disabled]="savingNote()">
+              {{ savingNote() ? 'Adding note…' : 'Add note' }}
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <aside class="panel action-card">
+      <h2>Update ticket</h2>
+      <p>Keep the queue current as work progresses.</p>
+      <form [formGroup]="statusForm" (ngSubmit)="updateStatus()">
+        <label for="status">Status</label>
+        <select id="status" formControlName="status">
+          @for (status of statuses; track status) {
+            <option [value]="status">{{ status }}</option>
+          }
+        </select>
+        <button
+          class="button primary full"
+          type="submit"
+          [disabled]="savingStatus() || statusForm.controls.status.value === currentTicket.status"
+        >
+          {{ savingStatus() ? 'Saving…' : 'Save status' }}
+        </button>
+      </form>
+    </aside>
+  </div>
+}

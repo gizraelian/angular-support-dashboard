@@ -1,0 +1,133 @@
+<header class="page-header">
+  <div>
+    <p class="eyebrow">Support operations</p>
+    <h1>Ticket queue</h1>
+    <p class="page-summary">Review current requests, prioritize follow-up, and keep work moving.</p>
+  </div>
+  <div class="queue-total">
+    <strong>{{ tickets().length }}</strong
+    ><span>open and recent tickets</span>
+  </div>
+</header>
+
+<section class="panel filters" aria-label="Ticket filters">
+  <form [formGroup]="filtersForm">
+    <label class="search-field">
+      <span>Search tickets</span>
+      <input
+        formControlName="search"
+        type="search"
+        placeholder="ID, title, customer, or assignee"
+      />
+    </label>
+    <label>
+      <span>Status</span>
+      <select formControlName="status">
+        <option value="All">All statuses</option>
+        @for (status of statuses; track status) {
+          <option [value]="status">{{ status }}</option>
+        }
+      </select>
+    </label>
+    <label>
+      <span>Priority</span>
+      <select formControlName="priority">
+        <option value="All">All priorities</option>
+        @for (priority of priorities; track priority) {
+          <option [value]="priority">{{ priority }}</option>
+        }
+      </select>
+    </label>
+    <label>
+      <span>Sort by</span>
+      <select formControlName="sort">
+        <option value="newest">Newest first</option>
+        <option value="oldest">Oldest first</option>
+        <option value="priority-high">Priority: high to low</option>
+        <option value="priority-low">Priority: low to high</option>
+      </select>
+    </label>
+  </form>
+</section>
+
+<section class="panel table-panel" aria-live="polite">
+  @if (loading()) {
+    <div class="state">
+      <span class="spinner" aria-hidden="true"></span>
+      <h2>Loading tickets</h2>
+      <p>Retrieving the latest queue.</p>
+    </div>
+  } @else if (errorMessage()) {
+    <div class="state error-state">
+      <h2>Unable to load tickets</h2>
+      <p>{{ errorMessage() }}</p>
+      <button class="button secondary" type="button" (click)="loadTickets()">Try again</button>
+    </div>
+  } @else if (!filteredTickets().length) {
+    <div class="state">
+      <h2>No tickets found</h2>
+      <p>Try clearing a filter or using a broader search.</p>
+    </div>
+  } @else {
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Ticket</th>
+            <th>Customer</th>
+            <th>Status</th>
+            <th>Priority</th>
+            <th>Created</th>
+            <th>Assigned to</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (ticket of visibleTickets(); track ticket.id) {
+            <tr>
+              <td>
+                <a [routerLink]="['/tickets', ticket.id]"
+                  ><span class="ticket-id">{{ ticket.id }}</span
+                  ><strong>{{ ticket.title }}</strong></a
+                >
+              </td>
+              <td>{{ ticket.customer }}</td>
+              <td>
+                <span class="badge status" [attr.data-status]="ticket.status">{{
+                  ticket.status
+                }}</span>
+              </td>
+              <td>
+                <span class="badge priority" [attr.data-priority]="ticket.priority">{{
+                  ticket.priority
+                }}</span>
+              </td>
+              <td>{{ ticket.createdAt | date: 'MMM d, y' }}</td>
+              <td>{{ ticket.assignedTo }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <footer class="pagination">
+      <p>Showing {{ rangeStart() }}–{{ rangeEnd() }} of {{ filteredTickets().length }}</p>
+      <div>
+        <button
+          type="button"
+          class="button secondary"
+          (click)="previousPage()"
+          [disabled]="page() === 1"
+        >
+          Previous</button
+        ><span>Page {{ page() }} of {{ totalPages() }}</span
+        ><button
+          type="button"
+          class="button secondary"
+          (click)="nextPage()"
+          [disabled]="page() === totalPages()"
+        >
+          Next
+        </button>
+      </div>
+    </footer>
+  }
+</section>
