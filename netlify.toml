@@ -1,0 +1,9 @@
+[build]
+  command = "pnpm build"
+  publish = "dist/angular-support-dashboard/browser"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
