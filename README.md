@@ -43,7 +43,7 @@ Open `http://localhost:4200`.
 ## Tests and production build
 
 ```bash
-pnpm test -- --watch=false
+pnpm test --watch=false
 pnpm build
 ```
 
