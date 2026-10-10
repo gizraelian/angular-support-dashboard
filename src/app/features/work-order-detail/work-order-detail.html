@@ -1,0 +1,47 @@
+<header class="page-heading">
+  <div>
+    <h1>Work-order details</h1>
+    <p>Spring Boot / PostgreSQL · Read-only</p>
+  </div>
+  <a class="button secondary" routerLink="/work-orders">Back to work orders</a>
+</header>
+<section class="panel results" [attr.aria-busy]="loading()" aria-label="Work-order details">
+  @if (loading()) {
+    <p role="status">Loading work order…</p>
+  } @else if (errorMessage()) {
+    <div role="alert">
+      <p>{{ errorMessage() }}</p>
+      <button class="button primary" (click)="load()">Retry</button>
+    </div>
+  } @else if (order(); as order) {
+    <h2>#{{ order.id }} · {{ order.title }}</h2>
+    <p class="description">{{ order.description || 'No description provided.' }}</p>
+    <dl>
+      <div>
+        <dt>Status</dt>
+        <dd>{{ order.status.replaceAll('_', ' ') }}</dd>
+      </div>
+      <div>
+        <dt>Priority</dt>
+        <dd>{{ order.priority }}</dd>
+      </div>
+      <div>
+        <dt>Requester email</dt>
+        <dd>{{ order.requesterEmail }}</dd>
+      </div>
+      <div>
+        <dt>Due date</dt>
+        <dd>{{ order.dueDate ? (order.dueDate | date: 'mediumDate') : 'Not set' }}</dd>
+      </div>
+      <div>
+        <dt>Created</dt>
+        <dd>{{ order.createdAt | date: 'medium' }}</dd>
+      </div>
+      <div>
+        <dt>Updated</dt>
+        <dd>{{ order.updatedAt | date: 'medium' }}</dd>
+      </div>
+    </dl>
+    <p class="muted">Timestamps are supplied by the backend without a timezone.</p>
+  }
+</section>

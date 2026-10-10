@@ -60,3 +60,7 @@ The focused test suite covers search/filter behavior, a service update, reactive
 ## What this demonstrates
 
 Practical Angular and TypeScript work: typed domain models, feature routing, reactive forms, asynchronous state handling, derived list behavior, component-level responsive design, and focused automated tests. The scope is deliberately representative of a weekend-sized portfolio project rather than a full support platform.
+
+## Read-only work orders (M4A)
+
+`/tickets` retains the fictional in-memory support-ticket demo. `/work-orders` and `/work-orders/:id` read the real Spring Boot API through a loopback development proxy. Start the personal Compose backend separately; no browser credentials are required for its public GET endpoints. See [the M4A report](docs/M4A_READ_ONLY_WORK_ORDERS.md) for contracts, verification limits, local setup and security considerations. The development proxy is not part of a deployed static build.

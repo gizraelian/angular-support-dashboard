@@ -81,3 +81,31 @@
     padding-top: 1.5rem;
   }
 }
+
+.domain-nav {
+  display: flex;
+  gap: 0.8rem;
+}
+.domain-nav a {
+  color: #d0d5dd;
+  font-size: 0.8rem;
+  text-decoration: none;
+  padding: 0.4rem;
+}
+.domain-nav a.active {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 0.3rem;
+}
+.domain-nav a:focus-visible {
+  outline: 3px solid #84adff;
+}
+@media (max-width: 520px) {
+  .app-header {
+    height: auto;
+    min-height: 4.25rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+  }
+}

@@ -13,6 +13,20 @@ export const routes: Routes = [
       import('./features/ticket-detail/ticket-detail').then((module) => module.TicketDetail),
     title: 'Ticket Details | Support Operations',
   },
+  {
+    path: 'work-orders',
+    loadComponent: () =>
+      import('./features/work-order-list/work-order-list').then((module) => module.WorkOrderList),
+    title: 'Work Orders | Support Operations',
+  },
+  {
+    path: 'work-orders/:id',
+    loadComponent: () =>
+      import('./features/work-order-detail/work-order-detail').then(
+        (module) => module.WorkOrderDetail,
+      ),
+    title: 'Work-order Details | Support Operations',
+  },
   { path: '', pathMatch: 'full', redirectTo: 'tickets' },
   { path: '**', redirectTo: 'tickets' },
 ];

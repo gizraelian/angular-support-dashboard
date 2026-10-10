@@ -3,11 +3,19 @@
     <span class="brand-mark">SO</span>
     <span><strong>Support Operations</strong><small>Dashboard</small></span>
   </a>
-  <div class="environment"><span></span> Demo environment</div>
+  <nav class="domain-nav" aria-label="Main navigation">
+    <a routerLink="/tickets" routerLinkActive="active" ariaCurrentWhenActive="page"
+      >Support tickets</a
+    >
+    <a routerLink="/work-orders" routerLinkActive="active" ariaCurrentWhenActive="page"
+      >Work orders</a
+    >
+  </nav>
 </header>
 <main class="app-main"><router-outlet /></main>
 <footer class="app-footer">
   <p>
-    Portfolio demonstration application. Data is stored in memory and resets when the page reloads.
+    Support tickets use fictional in-memory data and reset on reload. Work orders are read from the
+    Spring API.
   </p>
 </footer>
