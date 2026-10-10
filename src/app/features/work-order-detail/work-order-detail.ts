@@ -12,6 +12,7 @@ import {
   writeErrorMessage,
 } from '../../services/work-order-write';
 import { WorkOrder } from '../../models/work-order';
+import { LocalSessionService } from '../../services/local-session.service';
 import { WorkOrderService, workOrderErrorMessage } from '../../services/work-order.service';
 
 @Component({
@@ -28,6 +29,7 @@ export class WorkOrderDetail {
   readonly order = signal<WorkOrder | null>(null);
   readonly loading = signal(true);
   readonly errorMessage = signal('');
+  readonly session = inject(LocalSessionService);
   readonly preview = inject(LOCAL_WORKFLOW_PREVIEW);
   readonly blocker = BROWSER_WRITE_BLOCKER;
   readonly statuses = WORK_ORDER_STATUSES;

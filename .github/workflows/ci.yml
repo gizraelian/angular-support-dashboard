@@ -20,3 +20,4 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm test --watch=false
       - run: pnpm build
+      - run: node scripts/verify_release.mjs

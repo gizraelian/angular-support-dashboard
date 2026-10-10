@@ -1,3 +1,4 @@
+import { provideHttpClient } from '@angular/common/http';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
@@ -14,6 +15,7 @@ describe('Create form', () => {
     await TestBed.configureTestingModule({
       imports: [WorkOrderCreate],
       providers: [
+        provideHttpClient(),
         provideRouter([]),
         { provide: LOCAL_WORKFLOW_PREVIEW, useValue: preview },
         { provide: WorkOrderService, useValue: { createWorkOrder } },

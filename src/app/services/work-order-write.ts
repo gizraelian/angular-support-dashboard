@@ -35,7 +35,8 @@ export function writeErrorMessage(error: unknown): string {
   if (error instanceof Error && !(error instanceof HttpErrorResponse)) return error.message;
   if (error instanceof HttpErrorResponse) {
     if (error.status === 401) return 'Authentication was rejected. No write was retried.';
-    if (error.status === 403) return 'The API forbids this operation. No write was retried.';
+    if (error.status === 403)
+      return 'The API rejected access or CSRF validation. Reload to refresh your session before trying again. No write was retried.';
     if (error.status === 400) return 'Check the highlighted fields and request values.';
   }
   return 'The write outcome is uncertain. Reload work orders before manually submitting again.';

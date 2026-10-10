@@ -1,0 +1,39 @@
+@if (session.enabled) {
+  <section
+    class="panel results local-session"
+    aria-label="Local development session"
+    [attr.aria-busy]="session.busy()"
+  >
+    <h2>Local development session</h2>
+    @if (!session.ready()) {
+      <p role="status">Checking session…</p>
+    } @else if (session.authenticated()) {
+      <p>Signed in · Session expires after inactivity.</p>
+      <button class="button secondary" [disabled]="session.busy()" (click)="logout()">
+        Log out
+      </button>
+    } @else {
+      <form class="write-form" [formGroup]="form" (ngSubmit)="login()">
+        <fieldset [disabled]="session.busy()">
+          <label
+            >Local username<input formControlName="username" autocomplete="off" required
+          /></label>
+          <label
+            >Local password<input
+              formControlName="password"
+              type="password"
+              autocomplete="off"
+              required
+          /></label>
+          <button class="button primary" type="submit" [disabled]="form.invalid || session.busy()">
+            {{ session.busy() ? 'Signing in…' : 'Log in' }}
+          </button>
+        </fieldset>
+      </form>
+      <button class="button secondary" [disabled]="session.busy()" (click)="recover()">
+        Check session
+      </button>
+    }
+    <p role="status">{{ session.message() }}</p>
+  </section>
+}

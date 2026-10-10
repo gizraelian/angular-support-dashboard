@@ -1,3 +1,4 @@
+import { provideHttpClient } from '@angular/common/http';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
@@ -16,6 +17,7 @@ describe('Status form', () => {
     await TestBed.configureTestingModule({
       imports: [WorkOrderDetail],
       providers: [
+        provideHttpClient(),
         provideRouter([]),
         { provide: ActivatedRoute, useValue: { paramMap: params } },
         { provide: LOCAL_WORKFLOW_PREVIEW, useValue: true },

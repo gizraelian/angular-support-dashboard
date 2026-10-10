@@ -51,6 +51,21 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "local-browser": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/app/services/local-browser-build.ts",
+                  "with": "src/app/services/local-browser-build.development.ts"
+                },
+                {
+                  "replace": "src/app/services/local-browser.providers.ts",
+                  "with": "src/app/services/local-browser.providers.development.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -63,6 +78,10 @@
             },
             "development": {
               "buildTarget": "angular-support-dashboard:build:development"
+            },
+            "local-browser": {
+              "buildTarget": "angular-support-dashboard:build:local-browser",
+              "proxyConfig": "proxy.local-browser.json"
             }
           },
           "defaultConfiguration": "development",

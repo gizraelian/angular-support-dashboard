@@ -1,7 +1,7 @@
 <header class="page-heading">
   <div>
     <h1>Work-order details</h1>
-    <p>Spring Boot / PostgreSQL · Read-only</p>
+    <p>Spring Boot / PostgreSQL · {{ session.enabled ? 'Local session workflow' : 'Read-only' }}</p>
   </div>
   <a class="button secondary" routerLink="/work-orders">Back to work orders</a>
 </header>
@@ -43,9 +43,13 @@
       </div>
     </dl>
     @if (preview) {
-      <section aria-label="Local status preview">
-        <h3>Local development status preview</h3>
-        <p>{{ blocker }}</p>
+      <section aria-label="Local status control">
+        <h3>Local development status</h3>
+        @if (!session.enabled) {
+          <p>{{ blocker }}</p>
+        } @else if (!session.authenticated()) {
+          <p>Log in above to change status.</p>
+        }
         <label
           >Status<select [formControl]="status" [attr.disabled]="saving() ? '' : null">
             @for (value of statuses; track value) {
@@ -55,10 +59,16 @@
         >
         <button
           class="button primary"
-          [disabled]="saving() || status.invalid"
+          [disabled]="saving() || status.invalid || (session.enabled && !session.authenticated())"
           (click)="updateStatus()"
         >
-          {{ saving() ? 'Saving…' : 'Check status update (blocked)' }}
+          {{
+            saving()
+              ? 'Saving…'
+              : session.enabled
+                ? 'Update status'
+                : 'Check status update (blocked)'
+          }}
         </button>
         @if (writeMessage()) {
           <p role="status">{{ writeMessage() }}</p>

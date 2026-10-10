@@ -3,8 +3,12 @@
   <a routerLink="/work-orders">Back to work orders</a>
 </header>
 @if (preview) {
-  <p role="note">Local development form preview · Authenticated browser writes unavailable</p>
-  <p>{{ blocker }}</p>
+  <p role="note">Local development work orders</p>
+  @if (!session.enabled) {
+    <p>{{ blocker }}</p>
+  } @else if (!session.authenticated()) {
+    <p>Log in above to create a work order.</p>
+  }
   <form
     class="panel results write-form"
     [formGroup]="form"
@@ -40,8 +44,18 @@
           <p role="alert">{{ field }}: {{ errors()[field] }}</p>
         }
       }
-      <button class="button primary" type="submit" [disabled]="form.invalid || busy()">
-        {{ busy() ? 'Submitting…' : 'Check submission (blocked)' }}
+      <button
+        class="button primary"
+        type="submit"
+        [disabled]="form.invalid || busy() || (session.enabled && !session.authenticated())"
+      >
+        {{
+          busy()
+            ? 'Submitting…'
+            : session.enabled
+              ? 'Create work order'
+              : 'Check submission (blocked)'
+        }}
       </button>
     </fieldset>
   </form>

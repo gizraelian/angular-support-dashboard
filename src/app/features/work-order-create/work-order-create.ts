@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { WORK_ORDER_PRIORITIES, WorkOrderPriority } from '../../models/work-order';
+import { LocalSessionService } from '../../services/local-session.service';
 import { WorkOrderService } from '../../services/work-order.service';
 import {
   BROWSER_WRITE_BLOCKER,
@@ -18,6 +19,7 @@ import {
   styleUrl: '../work-orders.scss',
 })
 export class WorkOrderCreate {
+  readonly session = inject(LocalSessionService);
   readonly preview = inject(LOCAL_WORKFLOW_PREVIEW);
   readonly blocker = BROWSER_WRITE_BLOCKER;
   private readonly service = inject(WorkOrderService);
