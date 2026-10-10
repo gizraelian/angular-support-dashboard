@@ -1,13 +1,42 @@
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, retry, throwError, timer } from 'rxjs';
-import { WorkOrder, WorkOrderApiError, WorkOrderPage, WorkOrderQuery } from '../models/work-order';
+import {
+  CreateWorkOrderRequest,
+  WorkOrderStatus,
+  WorkOrder,
+  WorkOrderApiError,
+  WorkOrderPage,
+  WorkOrderQuery,
+} from '../models/work-order';
 
-/** Only safe reads. No credentials, writes, or ticket-domain behavior. */
+import {
+  BROWSER_WRITE_BLOCKER,
+  LOCAL_WORKFLOW_PREVIEW,
+  WORK_ORDER_WRITE_TRANSPORT,
+} from './work-order-write';
+
+/** Public reads; writes fail closed without a separately approved transport. */
 @Injectable({ providedIn: 'root' })
 export class WorkOrderService {
   private readonly http = inject(HttpClient);
   private readonly url = '/api/work-orders';
+  private readonly localPreview = inject(LOCAL_WORKFLOW_PREVIEW);
+  private readonly writes = inject(WORK_ORDER_WRITE_TRANSPORT, { optional: true });
+
+  createWorkOrder(request: CreateWorkOrderRequest): Observable<WorkOrder> {
+    return (
+      (this.localPreview ? this.writes?.create(request) : undefined) ??
+      throwError(() => new Error(BROWSER_WRITE_BLOCKER))
+    );
+  }
+
+  updateStatus(id: number, status: WorkOrderStatus): Observable<WorkOrder> {
+    return (
+      (this.localPreview ? this.writes?.updateStatus(id, status) : undefined) ??
+      throwError(() => new Error(BROWSER_WRITE_BLOCKER))
+    );
+  }
 
   getWorkOrders(query: WorkOrderQuery): Observable<WorkOrderPage> {
     let params = new HttpParams().set('page', query.page).set('size', query.size);

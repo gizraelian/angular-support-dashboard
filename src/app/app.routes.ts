@@ -20,6 +20,14 @@ export const routes: Routes = [
     title: 'Work Orders | Support Operations',
   },
   {
+    path: 'work-orders/new',
+    loadComponent: () =>
+      import('./features/work-order-create/work-order-create').then(
+        (module) => module.WorkOrderCreate,
+      ),
+    title: 'Create Work Order | Support Operations',
+  },
+  {
     path: 'work-orders/:id',
     loadComponent: () =>
       import('./features/work-order-detail/work-order-detail').then(

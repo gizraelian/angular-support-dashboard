@@ -64,3 +64,7 @@ Practical Angular and TypeScript work: typed domain models, feature routing, rea
 ## Read-only work orders (M4A)
 
 `/tickets` retains the fictional in-memory support-ticket demo. `/work-orders` and `/work-orders/:id` read the real Spring Boot API through a loopback development proxy. Start the personal Compose backend separately; no browser credentials are required for its public GET endpoints. See [the M4A report](docs/M4A_READ_ONLY_WORK_ORDERS.md) for contracts, verification limits, local setup and security considerations. The development proxy is not part of a deployed static build.
+
+## M4B local workflow
+
+See [M4B design, safeguards and verification](docs/M4B_LOCAL_WORKFLOW.md). Browser writes remain blocked pending CSRF-safe authentication; typed forms are tested and local API persistence is verified separately.

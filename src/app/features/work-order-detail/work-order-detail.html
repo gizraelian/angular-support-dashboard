@@ -42,6 +42,29 @@
         <dd>{{ order.updatedAt | date: 'medium' }}</dd>
       </div>
     </dl>
+    @if (preview) {
+      <section aria-label="Local status preview">
+        <h3>Local development status preview</h3>
+        <p>{{ blocker }}</p>
+        <label
+          >Status<select [formControl]="status" [attr.disabled]="saving() ? '' : null">
+            @for (value of statuses; track value) {
+              <option [value]="value">{{ value }}</option>
+            }
+          </select></label
+        >
+        <button
+          class="button primary"
+          [disabled]="saving() || status.invalid"
+          (click)="updateStatus()"
+        >
+          {{ saving() ? 'Saving…' : 'Check status update (blocked)' }}
+        </button>
+        @if (writeMessage()) {
+          <p role="status">{{ writeMessage() }}</p>
+        }
+      </section>
+    }
     <p class="muted">Timestamps are supplied by the backend without a timezone.</p>
   }
 </section>

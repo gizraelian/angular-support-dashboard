@@ -16,6 +16,15 @@ export interface WorkOrder {
   updatedAt: string;
 }
 
+/** Backend create DTO; status and timestamps are supplied by the server. */
+export interface CreateWorkOrderRequest {
+  title: string;
+  description: string | null;
+  priority: WorkOrderPriority;
+  requesterEmail: string;
+  dueDate: string | null;
+}
+
 /** Spring Data VIA_DTO serialization, not the legacy PageImpl JSON shape. */
 export interface WorkOrderPage {
   content: WorkOrder[];

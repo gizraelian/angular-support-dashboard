@@ -1,0 +1,56 @@
+<header class="page-heading">
+  <h1>Create work order</h1>
+  <a routerLink="/work-orders">Back to work orders</a>
+</header>
+@if (preview) {
+  <p role="note">Local development form preview · Authenticated browser writes unavailable</p>
+  <p>{{ blocker }}</p>
+  <form
+    class="panel results write-form"
+    [formGroup]="form"
+    (ngSubmit)="submit()"
+    [attr.aria-busy]="busy()"
+  >
+    <fieldset [disabled]="busy()">
+      <label>Title<input formControlName="title" maxlength="120" required /></label>
+      <label>Description<textarea formControlName="description" maxlength="2000"></textarea></label>
+      <label
+        >Priority<select formControlName="priority">
+          @for (priority of priorities; track priority) {
+            <option [value]="priority">{{ priority }}</option>
+          }
+        </select></label
+      >
+      <label
+        >Requester email<input
+          formControlName="requesterEmail"
+          type="email"
+          maxlength="254"
+          required
+      /></label>
+      <label>Due date (optional)<input formControlName="dueDate" type="date" /></label>
+      @for (
+        field of ['title', 'description', 'priority', 'requesterEmail', 'dueDate'];
+        track field
+      ) {
+        @if (form.get(field)?.touched && form.get(field)?.invalid) {
+          <p role="alert">{{ field }}: Check the required value and length.</p>
+        }
+        @if (errors()[field]) {
+          <p role="alert">{{ field }}: {{ errors()[field] }}</p>
+        }
+      }
+      <button class="button primary" type="submit" [disabled]="form.invalid || busy()">
+        {{ busy() ? 'Submitting…' : 'Check submission (blocked)' }}
+      </button>
+    </fieldset>
+  </form>
+  @if (message()) {
+    <p role="status">{{ message() }}</p>
+  }
+} @else {
+  <p role="status">
+    Work-order creation is available only as a local development preview. Browser writes are
+    blocked.
+  </p>
+}
