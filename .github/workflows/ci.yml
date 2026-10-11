@@ -21,3 +21,52 @@ jobs:
       - run: pnpm test --watch=false
       - run: pnpm build
       - run: node scripts/verify_release.mjs
+
+  browser-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          path: frontend
+          persist-credentials: false
+      - uses: actions/checkout@v7
+        with:
+          repository: gizraelian/spring-work-order-api
+          ref: 956b47da529f3f853d3d0cf7658af3980057b2f5
+          path: backend
+          persist-credentials: false
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 11.19.0
+          package_json_file: frontend/package.json
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+      - name: Verify pinned backend artifact
+        working-directory: backend
+        run: ./mvnw clean verify
+      - name: Install frontend and Chromium
+        working-directory: frontend
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm exec playwright install --with-deps chromium
+      - name: Verify real local browser workflow
+        working-directory: frontend
+        env:
+          M5_BACKEND_REPO: ${{ github.workspace }}/backend
+        run: pnpm e2e
+      - name: Verify actual release browser controls
+        working-directory: frontend
+        run: |
+          pnpm build
+          node scripts/verify_release.mjs
+          node scripts/verify_release_browser.mjs

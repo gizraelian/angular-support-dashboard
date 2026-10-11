@@ -1,19 +1,27 @@
 @if (session.enabled) {
   <section
-    class="panel results local-session"
+    class="panel local-session"
     aria-label="Local development session"
     [attr.aria-busy]="session.busy()"
   >
-    <h2>Local development session</h2>
+    <div class="session-heading">
+      <div>
+        <h2>Local development session</h2>
+        <p class="muted">Isolated demo · Fictional work orders</p>
+      </div>
+      @if (session.ready() && session.authenticated()) {
+        <div class="session-actions">
+          <span class="badge signed-in">Signed in</span>
+          <button class="button secondary" [disabled]="session.busy()" (click)="logout()">
+            Log out
+          </button>
+        </div>
+      }
+    </div>
     @if (!session.ready()) {
       <p role="status">Checking session…</p>
-    } @else if (session.authenticated()) {
-      <p>Signed in · Session expires after inactivity.</p>
-      <button class="button secondary" [disabled]="session.busy()" (click)="logout()">
-        Log out
-      </button>
-    } @else {
-      <form class="write-form" [formGroup]="form" (ngSubmit)="login()">
+    } @else if (!session.authenticated()) {
+      <form class="session-form" [formGroup]="form" (ngSubmit)="login()">
         <fieldset [disabled]="session.busy()">
           <label
             >Local username<input formControlName="username" autocomplete="off" required
@@ -28,12 +36,22 @@
           <button class="button primary" type="submit" [disabled]="form.invalid || session.busy()">
             {{ session.busy() ? 'Signing in…' : 'Log in' }}
           </button>
+          <button
+            class="button secondary"
+            type="button"
+            [disabled]="session.busy()"
+            (click)="recover()"
+          >
+            Check session
+          </button>
         </fieldset>
       </form>
-      <button class="button secondary" [disabled]="session.busy()" (click)="recover()">
-        Check session
-      </button>
     }
-    <p role="status">{{ session.message() }}</p>
+    <p class="session-message" role="status">
+      {{ session.message() }}
+      @if (session.authenticated()) {
+        Expires after inactivity.
+      }
+    </p>
   </section>
 }

@@ -1,0 +1,16 @@
+{
+  "checks": [
+    "fresh database empty state",
+    "anonymous browser write 401 and no database change",
+    "login via real form",
+    "real backend 400 field error displayed and associated with title",
+    "valid browser create 201 and detail retrieval",
+    "full reload restores session; title description status priority email date persisted; independent PostgreSQL confirmation",
+    "390px mobile list detail form without horizontal overflow; keyboard field navigation",
+    "real 1m inactivity session expires; browser PATCH 401; exactly one attempt; PostgreSQL unchanged",
+    "re-login logout 204; empty password; disabled write; browser post-logout PATCH 401"
+  ],
+  "browser": "Chromium",
+  "fictionalDataOnly": true,
+  "secretsRecorded": false
+}

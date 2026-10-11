@@ -1,0 +1,9 @@
+{
+  "browser": "Chromium",
+  "checks": [
+    "release list has no local login/create controls",
+    "direct create route has no form",
+    "no auth endpoint or mutation or external requests"
+  ],
+  "localAssetsOnly": true
+}

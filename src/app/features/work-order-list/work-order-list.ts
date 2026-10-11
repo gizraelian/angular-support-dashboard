@@ -4,6 +4,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { LOCAL_WORKFLOW_PREVIEW } from '../../services/work-order-write';
+import { LocalSessionService } from '../../services/local-session.service';
 import {
   WORK_ORDER_PRIORITIES,
   WORK_ORDER_STATUSES,
@@ -23,6 +25,8 @@ export class WorkOrderList {
   private readonly service = inject(WorkOrderService);
   private readonly destroyRef = inject(DestroyRef);
   private request?: Subscription;
+  readonly preview = inject(LOCAL_WORKFLOW_PREVIEW);
+  readonly session = inject(LocalSessionService);
   readonly statuses = WORK_ORDER_STATUSES;
   readonly priorities = WORK_ORDER_PRIORITIES;
   readonly result = signal<WorkOrderPage | null>(null);

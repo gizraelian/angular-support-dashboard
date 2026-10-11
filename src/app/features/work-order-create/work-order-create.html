@@ -16,33 +16,104 @@
     [attr.aria-busy]="busy()"
   >
     <fieldset [disabled]="busy()">
-      <label>Title<input formControlName="title" maxlength="120" required /></label>
-      <label>Description<textarea formControlName="description" maxlength="2000"></textarea></label>
       <label
-        >Priority<select formControlName="priority">
+        >Title<input
+          formControlName="title"
+          [attr.aria-invalid]="
+            (form.get('title')?.touched && form.get('title')?.invalid) || !!errors()['title']
+          "
+          aria-describedby="title-error"
+          maxlength="120"
+          required
+      /></label>
+      @if (form.get('title')?.touched && form.get('title')?.invalid) {
+        <p class="field-error" id="title-error" role="alert">
+          title: Check the required value and length.
+        </p>
+      } @else if (errors()['title']) {
+        <p class="field-error" id="title-error" role="alert">title: {{ errors()['title'] }}</p>
+      }
+      <label
+        >Description<textarea
+          formControlName="description"
+          [attr.aria-invalid]="
+            (form.get('description')?.touched && form.get('description')?.invalid) ||
+            !!errors()['description']
+          "
+          aria-describedby="description-error"
+          maxlength="2000"
+        ></textarea>
+      </label>
+      @if (form.get('description')?.touched && form.get('description')?.invalid) {
+        <p class="field-error" id="description-error" role="alert">
+          description: Check the required value and length.
+        </p>
+      } @else if (errors()['description']) {
+        <p class="field-error" id="description-error" role="alert">
+          description: {{ errors()['description'] }}
+        </p>
+      }
+      <label
+        >Priority<select
+          formControlName="priority"
+          [attr.aria-invalid]="
+            (form.get('priority')?.touched && form.get('priority')?.invalid) ||
+            !!errors()['priority']
+          "
+          aria-describedby="priority-error"
+        >
           @for (priority of priorities; track priority) {
             <option [value]="priority">{{ priority }}</option>
           }
         </select></label
       >
+      @if (form.get('priority')?.touched && form.get('priority')?.invalid) {
+        <p class="field-error" id="priority-error" role="alert">
+          priority: Check the required value and length.
+        </p>
+      } @else if (errors()['priority']) {
+        <p class="field-error" id="priority-error" role="alert">
+          priority: {{ errors()['priority'] }}
+        </p>
+      }
       <label
         >Requester email<input
           formControlName="requesterEmail"
+          [attr.aria-invalid]="
+            (form.get('requesterEmail')?.touched && form.get('requesterEmail')?.invalid) ||
+            !!errors()['requesterEmail']
+          "
+          aria-describedby="requesterEmail-error"
           type="email"
           maxlength="254"
           required
       /></label>
-      <label>Due date (optional)<input formControlName="dueDate" type="date" /></label>
-      @for (
-        field of ['title', 'description', 'priority', 'requesterEmail', 'dueDate'];
-        track field
-      ) {
-        @if (form.get(field)?.touched && form.get(field)?.invalid) {
-          <p role="alert">{{ field }}: Check the required value and length.</p>
-        }
-        @if (errors()[field]) {
-          <p role="alert">{{ field }}: {{ errors()[field] }}</p>
-        }
+      @if (form.get('requesterEmail')?.touched && form.get('requesterEmail')?.invalid) {
+        <p class="field-error" id="requesterEmail-error" role="alert">
+          requesterEmail: Check the required value and length.
+        </p>
+      } @else if (errors()['requesterEmail']) {
+        <p class="field-error" id="requesterEmail-error" role="alert">
+          requesterEmail: {{ errors()['requesterEmail'] }}
+        </p>
+      }
+      <label
+        >Due date (optional)<input
+          formControlName="dueDate"
+          [attr.aria-invalid]="
+            (form.get('dueDate')?.touched && form.get('dueDate')?.invalid) || !!errors()['dueDate']
+          "
+          aria-describedby="dueDate-error"
+          type="date"
+      /></label>
+      @if (form.get('dueDate')?.touched && form.get('dueDate')?.invalid) {
+        <p class="field-error" id="dueDate-error" role="alert">
+          dueDate: Check the required value and length.
+        </p>
+      } @else if (errors()['dueDate']) {
+        <p class="field-error" id="dueDate-error" role="alert">
+          dueDate: {{ errors()['dueDate'] }}
+        </p>
       }
       <button
         class="button primary"

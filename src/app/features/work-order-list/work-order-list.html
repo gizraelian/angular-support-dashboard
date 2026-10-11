@@ -1,9 +1,14 @@
 <header class="page-heading">
   <div>
     <h1>Work orders</h1>
-    <p>Spring Boot / PostgreSQL · Read-only</p>
+    <p>
+      Spring Boot / PostgreSQL · {{ session.enabled ? 'Local session workflow' : 'Read-only' }} ·
+      Fictional data
+    </p>
   </div>
-  <a class="button secondary" routerLink="/work-orders/new">Create work order (local)</a>
+  @if (preview) {
+    <a class="button secondary" routerLink="/work-orders/new">Create work order (local)</a>
+  }
   <a class="button secondary" routerLink="/tickets">Support tickets</a>
 </header>
 <form class="panel filters" [formGroup]="filtersForm">
@@ -42,8 +47,12 @@
           <li>
             <a [routerLink]="['/work-orders', order.id]">#{{ order.id }} · {{ order.title }}</a>
             <div class="metadata">
-              <span class="badge">{{ order.status.replaceAll('_', ' ') }}</span>
-              <span class="badge">{{ order.priority }}</span
+              <span class="badge order-status" [attr.data-status]="order.status">{{
+                order.status.replaceAll('_', ' ')
+              }}</span>
+              <span class="badge order-priority" [attr.data-priority]="order.priority">{{
+                order.priority
+              }}</span
               ><span>{{ order.requesterEmail }}</span>
               <span
                 >Due: {{ order.dueDate ? (order.dueDate | date: 'mediumDate') : 'Not set' }}</span

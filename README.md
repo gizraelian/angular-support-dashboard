@@ -1,74 +1,45 @@
-# Support Operations Dashboard
+# Support Operations — Angular dashboard
 
-A compact production-style Angular application created to demonstrate frontend architecture, typed service integration, reactive forms, validation, error handling, and maintainable component design.
+An independently developed full-stack enterprise application engineering demonstration using **Angular, Java/Spring Boot, PostgreSQL, security, testing, CI and containerized development**. Separate from commercial/employer experience.
 
-This is a **portfolio/demo application**, not commercial or client work. Its in-memory data is fictional and resets when the browser reloads.
+## Capabilities and data boundaries
 
-## Features
+- Fictional support tickets: in-memory search/filter/sort/pagination, detail, status and notes; reset on reload.
+- API-backed fictional work orders: list/filter/pagination/detail through typed Angular HttpClient services.
+- Explicit local-browser development build: session login, CSRF-protected create/status update, reload restoration, inactivity expiry and logout. PostgreSQL persists work orders.
+- Reactive forms, independent backend validation, associated field errors, loading/empty/success/error states and responsive native controls.
+- 75 Angular unit tests at M4C baseline; M5 adds real Chromium E2E against isolated Spring Boot/PostgreSQL, with SQL confirmation. Release gate checks and GitHub Actions verification complement tests.
 
-- Search tickets by ID, title, customer, or assignee
-- Filter by status and priority, with date and priority sorting
-- Paginated ticket table with loading, empty, and error states
-- Routed ticket detail view
-- Status updates and internal notes with confirmation messaging
-- Reactive form validation and responsive desktop-first styling
-
-## Technical stack
-
-- Angular 22 with standalone, lazy-loaded components
-- TypeScript 6, Angular Router, and Reactive Forms
-- RxJS for asynchronous service operations and form event handling
-- SCSS with no UI framework dependency
-- Vitest through the Angular test builder
-- Netlify configuration with SPA route fallback
-
-## Architecture
-
-The application is intentionally small. `TicketList` owns queue presentation and filter state, while `TicketDetail` owns the update forms. `TicketService` provides a typed asynchronous boundary around an in-memory data source. Its observable methods mirror the shape of REST operations, so a real `HttpClient` implementation can replace it without changing the components.
-
-Filtering and sorting live in a pure utility, keeping the component readable and the business behavior easy to test.
-
-## Run locally
-
-Requires Node.js 22.22.3 or newer.
-
-```bash
-corepack enable
-pnpm install
-pnpm start
+```mermaid
+flowchart LR
+  Angular --> HTTP[HTTP / API proxy] --> Security[Spring Security] --> Boot[Spring Boot] --> JPA --> PostgreSQL
 ```
 
-Open `http://localhost:4200`.
+Stack: Angular 22 standalone lazy routes/signals, TypeScript 6, RxJS, reactive forms and SCSS; Vitest unit tests and Playwright browser acceptance. No redundant browser framework or major design system.
 
-## Tests and production build
+## Run and verify
+
+Requires supported Node (24 in CI), pnpm 11.19.0; Java 21/Docker for integrated E2E.
 
 ```bash
+pnpm install --frozen-lockfile
+pnpm start
 pnpm test --watch=false
 pnpm build
+node scripts/verify_release.mjs
 ```
 
-The focused test suite covers search/filter behavior, a service update, reactive form validation, and component update behavior.
+Generic development mode keeps API writes blocked. Production builds omit local login/write controls and the session transport. Public work-order reads need an approved API route; the dev proxy is not deployed with static assets.
 
-## Implementation decisions
+For the real local workflow, build the sibling backend with Maven `clean verify`, install Chromium with `pnpm exec playwright install chromium`, then run `pnpm e2e`. Set M5_BACKEND_REPO if the backend is not a sibling checkout. The harness supplies ephemeral credentials; no production/operator .env is needed. [Complete reproduction, actual results and screenshots](docs/M5_E2E_VERIFICATION.md).
 
-- Standalone components and route-level lazy loading keep the structure current without adding layers.
-- A service abstraction keeps network latency and error handling at the same boundary a REST API would use.
-- Local in-memory updates make the demo self-contained; persistence and authentication are deliberately out of scope.
-- Native form controls and restrained SCSS keep the interface accessible, fast, and easy to maintain.
-- Netlify rewrites nested routes to `index.html`, so refreshing a ticket detail URL works correctly.
+## Engineering and presentation
 
-## What this demonstrates
+- [Architecture and orchestration](https://github.com/gizraelian/spring-work-order-api/blob/main/docs/ARCHITECTURE.md)
+- [Security design and limitations](https://github.com/gizraelian/spring-work-order-api/blob/main/docs/SECURITY_DESIGN_SUMMARY.md)
+- [Case study, interview walkthrough and portfolio card proposal](docs/PORTFOLIO_CASE_STUDY.md)
+- [M4C verification history](docs/M4C_VERIFICATION.md)
 
-Practical Angular and TypeScript work: typed domain models, feature routing, reactive forms, asynchronous state handling, derived list behavior, component-level responsive design, and focused automated tests. The scope is deliberately representative of a weekend-sized portfolio project rather than a full support platform.
+The existing public ticket/API demonstrations are distinct from the isolated authenticated local workflow. No public authenticated deployment is claimed. Public routing, data exposure and production Flyway adoption remain separately gated. CI verifies; M5 does not publish the portfolio or deploy to Netlify/DigitalOcean.
 
-## Read-only work orders (M4A)
-
-`/tickets` retains the fictional in-memory support-ticket demo. `/work-orders` and `/work-orders/:id` read the real Spring Boot API through a loopback development proxy. Start the personal Compose backend separately; no browser credentials are required for its public GET endpoints. See [the M4A report](docs/M4A_READ_ONLY_WORK_ORDERS.md) for contracts, verification limits, local setup and security considerations. The development proxy is not part of a deployed static build.
-
-## M4B local workflow
-
-See [M4B design, safeguards and verification](docs/M4B_LOCAL_WORKFLOW.md). Browser writes remain blocked pending CSRF-safe authentication; typed forms are tested and local API persistence is verified separately.
-
-## M4C secure local browser workflow
-
-See [M4C verification and local setup](docs/M4C_VERIFICATION.md) and [security design](docs/M4C_SECURITY_DESIGN.md). The explicit local-browser profile/build supports session login, CSRF-protected writes and logout; production/default behavior remains isolated.
+MIT License.

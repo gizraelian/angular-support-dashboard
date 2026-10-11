@@ -124,3 +124,114 @@ dd {
     grid-template-columns: 1fr;
   }
 }
+
+.local-session {
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+.session-heading,
+.session-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.session-heading h2 {
+  font-size: 0.95rem;
+  margin: 0;
+}
+.session-heading p,
+.session-message {
+  font-size: 0.8rem;
+  margin: 0.35rem 0 0;
+}
+.session-message:empty {
+  display: none;
+}
+.session-form fieldset {
+  border: 0;
+  padding: 0;
+  margin: 1rem 0 0;
+  display: flex;
+  align-items: end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.session-form label {
+  min-width: 12rem;
+}
+.session-form input {
+  display: block;
+  margin-top: 0.4rem;
+}
+.signed-in {
+  background: #ecfdf3;
+  color: #067647;
+}
+.field-error {
+  color: var(--danger);
+  font-size: 0.8rem;
+  margin: 0.4rem 0 1rem;
+}
+.write-form {
+  max-width: 48rem;
+}
+.write-form label {
+  max-width: none;
+}
+.write-form textarea {
+  min-height: 6rem;
+  resize: vertical;
+}
+.write-form label:has(+ .field-error) {
+  margin-bottom: 0.25rem;
+}
+.status-control {
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+}
+.status-control label {
+  display: block;
+  max-width: 20rem;
+  margin-bottom: 0.75rem;
+}
+.order-status[data-status='OPEN'] {
+  background: #eff8ff;
+  color: #175cd3;
+}
+.order-status[data-status='IN_PROGRESS'] {
+  background: #f4f3ff;
+  color: #5925dc;
+}
+.order-status[data-status='COMPLETED'] {
+  background: #ecfdf3;
+  color: #067647;
+}
+.order-status[data-status='CANCELLED'] {
+  background: #f2f4f7;
+  color: #475467;
+}
+.order-priority[data-priority='LOW'] {
+  background: #f2f4f7;
+  color: #475467;
+}
+.order-priority[data-priority='MEDIUM'] {
+  background: #eef4ff;
+  color: #3538cd;
+}
+.order-priority[data-priority='HIGH'] {
+  background: #fff6ed;
+  color: #c4320a;
+}
+@media (max-width: 600px) {
+  .session-heading {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .session-form label {
+    flex-basis: 100%;
+  }
+  .pagination {
+    flex-wrap: wrap;
+  }
+}

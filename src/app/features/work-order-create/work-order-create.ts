@@ -40,9 +40,10 @@ export class WorkOrderCreate {
     dueDate: [''],
   });
   constructor() {
-    this.form.valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.errors.set({}));
+    this.form.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.errors.set({});
+      this.message.set('');
+    });
   }
   submit(): void {
     if (!this.preview || this.busy()) return;
